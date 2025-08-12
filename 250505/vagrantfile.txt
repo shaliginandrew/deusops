@@ -4,7 +4,7 @@ config.vm.define "nexus01" do |nexus01|
   nexus01.vm.box = "ubuntu/focal64" 
   nexus01.vm.disk :disk, size: "100GB", primary: true
   nexus01.vm.network "forwarded_port", guest: 8081, host: 8081, auto_correct: true
-  nexus01.vm.synced_folder "nexus-data/", "/var/lib/docker/volumes/nexus-data"
+  nexus01.vm.synced_folder "nexus-data/", "/var/lib/docker/volumes/nexus-data", owner: "root"
 
   nexus01.vm.provider "virtualbox" do |vb| 
     vb.memory = "8192" 
@@ -14,18 +14,18 @@ config.vm.define "nexus01" do |nexus01|
   nexus01.vm.provision "shell", inline: <<-SHELL
     sudo apt-get update
     sudo apt-get install docker.io -y
-    sudo docker run --rm -d -p 8081:8081 --name nexus -v nexus-data:/nexus-data sonatype/nexus3
+    sudo docker run --rm -d -p 8081:8081 --name nexus -v /var/lib/docker/volumes/nexus-data:/nexus-data sonatype/nexus3
   SHELL
 
 end
 
-# config.vm.define "runner01" do |runner01|
-#     runner01.vm.box = "ubuntu/focal64"
-# end
+config.vm.define "runner01" do |runner01|
+    runner01.vm.box = "ubuntu/focal64"
+end
 
-# config.vm.define "app01" do |app01|
-#     app01.vm.box = "ubuntu/focal64"
-# end
+config.vm.define "app01" do |app01|
+    app01.vm.box = "ubuntu/focal64"
+end
 
 end
 
